@@ -85,23 +85,39 @@ const addActionsSection = (data) => {
   var tbl = document.getElementById('my-table');
   var mainClosedDiv = document.createElement("div");
   mainClosedDiv.setAttribute('class', 'actions-section');
-  mainClosedDiv.setAttribute('id', 'section-closed');
-  var div = document.createElement("div");
-  div.setAttribute('class', 'actions-column');
-  div.setAttribute('id', 'my-div');
+  mainClosedDiv.setAttribute('id', 'section');
+  var closedDiv = document.createElement("div");
+  closedDiv.setAttribute('class', 'actions-column');
+  closedDiv.setAttribute('id', 'closed-div');
+  var openDiv = document.createElement("div");
+  openDiv.setAttribute('class', 'actions-column-open');
+  openDiv.setAttribute('id', 'open-div');
   for (var i = 0; i < data.length; i++) {
       var innerDiv = document.createElement("div");
       innerDiv.setAttribute('class', 'action');
       innerDiv.innerHTML = getImage(data[i].ImageName);
-      div.appendChild(innerDiv);
-      mainClosedDiv.appendChild(div);
+      var otherDiv = document.createElement("div");
+      otherDiv.setAttribute('class', 'action');
+      otherDiv.innerHTML = getImage(data[i].ImageName);
+      closedDiv.appendChild(otherDiv);
+      openDiv.appendChild(innerDiv);
+      mainClosedDiv.appendChild(closedDiv);
+      mainClosedDiv.appendChild(openDiv);
       tbl.appendChild(mainClosedDiv);
   }
   var newDiv = document.createElement("div");
-  newDiv.setAttribute('onClick', 'toggleActions');
-  newDiv.setAttribute('class', 'action');
+  newDiv.setAttribute('onclick', 'toggleOpen()');
+  newDiv.setAttribute('class', 'action-open');
+  newDiv.setAttribute('id', 'action-open');
   newDiv.innerHTML = '<i class="fa fa-arrow-left"></i>';
+  var makeDiv = document.createElement("button");
+  makeDiv.setAttribute('onclick', 'toggleClose()');
+  makeDiv.setAttribute('type', 'button');
+  makeDiv.setAttribute('class', 'btn btn-primary action-close');
+  makeDiv.setAttribute('id', 'action-close');
+  makeDiv.innerHTML = '<i class="fa fa-arrow-right"></i>';
   mainClosedDiv.appendChild(newDiv);
+  mainClosedDiv.appendChild(makeDiv);
   tbl.appendChild(mainClosedDiv);
 };
 
@@ -142,8 +158,28 @@ const getImage = (ImageName) => {
   }
 };
 
-const toggleActions = () => {
+const toggleOpen = () => {
+  var x1 = document.getElementById("open-div"); 
+  var y1 = document.getElementById("action-close"); 
+  var x2 = document.getElementById("closed-div");
+  var y2 = document.getElementById("action-open");  
+    x1.style.display = "inline-flex";
+    x1.style.flexFlow = "wrap";
+    x1.style.width = "300px";
+    y1.style.display = "block";
+    x2.style.display = "none";
+    y2.style.display = "none";
+};
 
+const toggleClose = () => {
+var x2 = document.getElementById("closed-div");
+var y2 = document.getElementById("action-open"); 
+var x1 = document.getElementById("open-div"); 
+var y1 = document.getElementById("action-close"); 
+    x1.style.display = "none";
+    y1.style.display = "none";
+    x2.style.display = "block";
+    y2.style.display = "block";
 };
 
 let table = document.querySelector('table');

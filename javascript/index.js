@@ -18,6 +18,7 @@ const generateTableHead = (table, data) => {
 const generateTable = (table, data) => {
 let tbdy = document.createElement('tbody');  
 tbdy.setAttribute('class', 'data-table-data-body');
+tbdy.setAttribute('id', 'data-table-body');
   for (let element of data) {
     let row = table.insertRow();
     row.setAttribute('class', 'data-table-data-row');
@@ -182,6 +183,37 @@ var y1 = document.getElementById("action-close");
     y2.style.display = "block";
 };
 
+const sortTable = (table, col, reverse) => {
+    var tb = table.tBodies[0], // tbody to actually get data
+        tr = Array.prototype.slice.call(tb.rows, 0), // pushing rows into  the array
+        i;
+    reverse = -((+reverse) || -1);
+    tr = tr.sort(function (a, b) { // sorting rows function
+        return reverse // `-1 *` if want opposite order
+            * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
+                .localeCompare(b.cells[col].textContent.trim())
+               );
+    });
+    for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append row in order
+}
+
+const makeSortable = (table) => {
+    var th = table.tHead, i;
+    th && (th = th.rows[0]) && (th = th.cells);
+    if (th) i = th.length;
+    else return; // if no `<thead>` then do nothing
+    while (--i >= 0) (function (i) {
+        var dir = 1;
+        th[i].addEventListener('click', function () {sortTable(table, i, (dir = 1 - dir))});
+    }(i));
+}
+
+const makeHeadersSortable = (parent) => {
+    parent = parent || document.body;
+    var t = parent.getElementsByTagName('table'), i = t.length;
+    while (--i >= 0) makeSortable(t[i]);
+};
+
 let table = document.querySelector('table');
 fetch('/sample.json').then(res => res.json()).then((response) => { 
   tableData = response;
@@ -189,4 +221,5 @@ fetch('/sample.json').then(res => res.json()).then((response) => {
   generateTable(table, tableData.GridData);
   generateTableHead(table, data); 
   addActionsSection(tableData.Actions);
+  makeHeadersSortable();
 });

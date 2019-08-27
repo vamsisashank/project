@@ -214,7 +214,20 @@ const makeHeadersSortable = (parent) => {
     while (--i >= 0) makeSortable(t[i]);
 };
 
-let table = document.querySelector('table');
+const highlight = (e) => {
+    if (selected[0]) selected[0].className = '';
+    e.target.parentNode.className = 'selected';
+};
+
+const fnselect = () => {
+    var tr = document.getElementsByClassName("selected")[0].innerText;
+    alert(tr);
+};
+
+let table = document.querySelector('table'),    
+selected = table.getElementsByClassName('selected');
+table.onclick = highlight;
+
 fetch('/sample.json').then(res => res.json()).then((response) => { 
   tableData = response;
   let data = Object.keys(tableData.GridData[0]);
